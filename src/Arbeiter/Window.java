@@ -49,7 +49,7 @@ public class Window extends javax.swing.JFrame {
 //Variablen als Connection deklarieren und Initialisiere
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/lolo?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/arbeiter?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
                     "root", //unser User Accounts
                     "");     //unser Passwort
         } catch (SQLException ex) {
@@ -102,7 +102,7 @@ public class Window extends javax.swing.JFrame {
             rs = st.executeQuery(query);
             Arbeiter product;
             while (rs.next()) {
-                product = new Arbeiter(rs.getInt("Id"), rs.getString("Name"), Float.parseFloat(rs.getString("Lohn")), rs.getString("Date"), rs.getBytes("Image"));
+                product = new Arbeiter(rs.getInt("Id"), rs.getString("Name"), Float.parseFloat(rs.getString("Lohn")), rs.getBytes("Image"));
                 productList.add(product);
             }
         } catch (SQLException ex) {
@@ -121,7 +121,6 @@ public class Window extends javax.swing.JFrame {
             row[0] = list.get(i).getId();
             row[1] = list.get(i).getName();
             row[2] = list.get(i).getLohn();
-            row[3] = list.get(i).getDate();
             model.addRow(row);
             // hier addiert nur ein Row und nicht alle Wieder
             tableJ.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -519,7 +518,7 @@ public class Window extends javax.swing.JFrame {
         if (checkInputs() == true && ImgPath == null ) {
 
             try {
-                ps = con.prepareStatement("INSERT INTO Arbeiter(Name,Lohn,Date)values(?,?,?)");
+                ps = con.prepareStatement("INSERT INTO Arbeiter(Name,Lohn)values(?,?)");
                 ps.setString(1, nameF.getText());
                 ps.setString(2, lohnF.getText());              
                 ps.executeUpdate();
@@ -532,7 +531,7 @@ public class Window extends javax.swing.JFrame {
         } else if (checkInputs() == true && ImgPath != null ) {
 
             try {
-                ps = con.prepareStatement("INSERT INTO Arbeiter(Name,Lohn,Date,image)values(?,?,?,?)");
+                ps = con.prepareStatement("INSERT INTO Arbeiter(Name,Lohn,image)values(?,?,?)");
                 ps.setString(1, nameF.getText());
                 ps.setString(2, lohnF.getText());
                 InputStream img = new FileInputStream(new File(ImgPath));
@@ -555,7 +554,7 @@ public class Window extends javax.swing.JFrame {
 
 //Update Ohne image
             try {
-                updateQuery = "UPDATE Arbeiter SET Name=?,Lohn=?,Date=?WHERE ID=?";
+                updateQuery = "UPDATE Arbeiter SET Name=?,Lohn=?WHERE ID=?";
                 ps = con.prepareStatement(updateQuery);
                 ps.setString(1, nameF.getText());
                 ps.setString(2, lohnF.getText());            
@@ -575,7 +574,7 @@ public class Window extends javax.swing.JFrame {
             InputStream img;
             try {
                 img = new FileInputStream(new File(ImgPath));
-                updateQuery = "UPDATE Arbeiter SET Name=?,Lohn=?,Date=?,image=? WHERE ID=?";
+                updateQuery = "UPDATE Arbeiter SET Name=?,Lohn=?,image=? WHERE ID=?";
                 ps = con.prepareStatement(updateQuery);
                 ps.setString(1, nameF.getText());
                 ps.setString(2, lohnF.getText());
